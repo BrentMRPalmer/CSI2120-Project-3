@@ -17,7 +17,7 @@
 ;;   String fileIn: The name of the file to be processed.
 ;;
 ;; Return:
-;;   list: a list of 3D points.
+;;   List: a list of 3D points.
 ;;
 ;; -------------------------   
 
@@ -39,12 +39,12 @@
 ;;              from the equation ax + by + cz = d.
 ;;
 ;; Input Parameters:
-;;   list P1: A list that represents the first point.
-;;   list P2: A list that represents the second point. 
-;;   list P3: A list that represents the third point. 
+;;   List P1: A list that represents the first point.
+;;   List P2: A list that represents the second point. 
+;;   List P3: A list that represents the third point. 
 ;;
 ;; Return:
-;;   list: A list of four elements that represents a, b, c, and d
+;;   List: A list of four elements that represents a, b, c, and d
 ;;         from the equation outlined in the description.
 ;;
 ;; -------------------------
@@ -67,21 +67,21 @@
 ;;
 ;; Function: distance
 ;;
-;; Description: Computes the distance between a point and a plane. (helper)
+;; Description: Computes the distance between a point and a plane. (Helper)
 ;;
 ;; Input Parameters:
-;;   list plane: A list of the a, b, c, and d values of
+;;   List plane: A list of the a, b, c, and d values of
 ;;               that represent a plane in the form
 ;;               ax + by + cz = d.
-;;   list point: A 3D point. 
+;;   List point: A 3D point. 
 ;;
 ;; Return:
-;;   number: the distance between the point and the plane 
+;;   Number: the distance between the point and the plane 
 ;;
 ;; -------------------------
 
 (define (distance plane point)
-  ( abs ( / ( + ( * (car plane) (car point) ) ( * (cadr plane) (cadr point) )
+  ( abs ( / ( + ( * (car plane) (car point) ) ( * (cadr plane) (cadr point) ) ; l = |a*x + b*y + c*z - d| / sqrt(a^2, b^2, c^2)
                 ( * (caddr plane) (caddr point) ) ( * (cadddr plane) -1 ) )
             ( sqrt ( + ( * (car plane) (car plane) ) ( * (cadr plane) (cadr plane) ) ( * (caddr plane) (caddr plane) ) ) ) ) ) )
 
@@ -92,15 +92,15 @@
 ;; Description: Creates the support of a plane.
 ;;
 ;; Input Parameters:
-;;   list plane: A list of the a, b, c, and d values of
+;;   List plane: A list of the a, b, c, and d values of
 ;;               that represent a plane in the form
 ;;               ax + by + cz = d.
-;;   list points: A list of 3D points.
+;;   List points: A list of 3D points.
 ;;   Number eps: Represents the maximum distance a point can be from a plane
 ;;               for the point to be considered part of the plane. 
 ;;
 ;; Return:
-;;   pair: car is a number that represents the support counter,
+;;   Pair: car is a number that represents the support counter,
 ;;         cdr is the plane parameters. 
 ;;
 ;; -------------------------
@@ -127,7 +127,37 @@
 ;; -------------------------
 
 (define (ransacNumberOfIteration confidence percentage)
-  ( ceiling ( / ( log ( - 1 confidence ) 10 ) ( log ( - 1 ( expt percentage 3 ) ) 10  ) ) ) )
+  ( ceiling ( / ( log ( - 1 confidence ) 10 ) ( log ( - 1 ( expt percentage 3 ) ) 10  ) ) ) ) ; equation to calculate confidence
+
+;; -------------------------
+;;
+;; Function: dominantPlaneHelper
+;;
+;; Description: Perform numerous samples to find dominant plane. (Helper)
+;;
+;; Input Parameters:
+;;    List Ps: A list of 3D points.
+;;    Number k: The number of iterations required.
+;;    Number eps: Represents the maximum distance a point can be from a plane
+;;               for the point to be considered part of the plane.
+;;    Pair best: Represents the best support for the plane
+;;
+;; Return:
+;;   Pair: car is a number that represents the best support counter,
+;;         cdr is the best plane parameters.  
+;;
+;; -------------------------
+
+(define (dominantPlaneHelper Ps k eps best)
+  (let ( (randomPoint1 (list-ref Ps (random (length Ps)))) ; find three random points
+         (randomPoint2 (list-ref Ps (random (length Ps))))
+         (randomPoint3 (list-ref Ps (random (length Ps)))) )
+    (let ( (currPlane (plane randomPoint1 randomPoint2 randomPoint3) ) ) ; create the plane from these points
+      (let ( (currSupport  (support currPlane Ps eps) ) ) ; calculate the support for this plane
+        (cond
+          ((= 0 k) best) ; if the number of iterations is reached, return the best plane found
+          ((> (car currSupport) (car best) ) (dominantPlaneHelper Ps (- k 1) eps currSupport) ) ; if the new plane is better, recursively call with it as new best
+          (else (dominantPlaneHelper Ps (- k 1) eps best))))))) ; else, recursively call with old best support as best
 
 ;; -------------------------
 ;;
@@ -136,15 +166,18 @@
 ;; Description: Perform numerous samples to find dominant plane. 
 ;;
 ;; Input Parameters:
-;;    list Ps: A list of 3D points.
-;;    number k: The number of iterations required. 
+;;    List Ps: A list of 3D points.
+;;    Number k: The number of iterations required. 
+;;    Number eps: Represents the maximum distance a point can be from a plane
+;;               for the point to be considered part of the plane.
 ;;
 ;; Return:
-;;   list: The parameters '(a b c d) of the dominant plane. 
+;;   List: The parameters '(a b c d) of the dominant plane. 
 ;;
 ;; -------------------------
 
-;(define (dominantPlane Ps k) )
+(define (dominantPlane Ps k eps)
+  (cdr (dominantPlaneHelper Ps k eps '(0 0 0 0 0)))) ; call a helper that tracks best support with an empty support - return the dominant plane
 
 ;; -------------------------
 ;;
@@ -163,16 +196,16 @@
 ;;               for the point to be considered part of the plane. 
 ;;
 ;; Return:
-;;   pair: car is the dominant plane equation, cdr is the number of points that supports it
+;;   Pair: car is the dominant plane equation, cdr is the number of points that supports it
 ;;
 ;; -------------------------  
 
-;; (define (planeRANSAC filename confidence percentage eps)
-;;  ( let (( Ps (readXYZ filename))) ; read the points from the file into Ps
-;;     (let ( (randomPoint1 (list-ref Ps (random (length Ps)))) ; find the three random points
-;;            (randomPoint2 (list-ref Ps (random (length Ps))))
-;;            (randomPoint3 (list-ref Ps (random (length Ps))))
-;;     ))))
+(define (planeRANSAC filename confidence percentage eps)
+  ( let (( Ps (readXYZ filename)) ; read the points from the file into Ps
+         ( k (ransacNumberOfIteration confidence percentage))) ; calculate the number of iterations required
+     ( let (( domPlane (dominantPlane Ps k eps))) ; determine the dominant plane
+        ( support domPlane Ps eps)))) ; find and return the support for the dominant plane
+     
 
 
 

@@ -40,6 +40,15 @@ Function: ransacNumberOfIteration
 (ransacNumberOfIteration 0.99 0.5)
 35.0
 
+Function: dominantPlane
+(dominantPlane (readXYZ "Point_Cloud_1_No_Road_Reduced.xyz") 35 1.2)
+[some equation parameters]
 
+(dominantPlane (readXYZ "PointCloud1.xyz") 35 0.5)
+[some equation parameters]
+
+Function: planeRANSAC
+(planeRANSAC "PointCloud1.xyz" 0.99 0.5 0.5)
+~36k points, [some equation parameters]
 
 
