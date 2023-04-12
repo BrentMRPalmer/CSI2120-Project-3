@@ -36,5 +36,10 @@ Function: support
 (support '(-1 -6 -2 -17) '((1 2 3) (4 5 6) (-1 0 1)) 4)
 (2 -1 -6 -2 -17)
 
+Function: ransacNumberOfIteration
+(ransacNumberOfIteration 0.99 0.5)
+35.0
+
+
 
 

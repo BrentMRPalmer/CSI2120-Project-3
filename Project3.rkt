@@ -106,8 +106,45 @@
 ;; -------------------------
 
 (define (support plane points eps)
-  ( let ( (valid (filter (lambda(point) (< (distance plane point) eps)) points)))
-       ( cons (length valid) plane ) ) )
+  ( let ( (valid (filter (lambda(point) (< (distance plane point) eps)) points))) ; use filter to make a list of valid support points
+       ( cons (length valid) plane ) ) ) ; return the length of the list of valid points in a pair with the plane equation
+
+;; -------------------------
+;;
+;; Function: ransacNumberOfIteration
+;;
+;; Description: Perform numerous samples to find dominant plane. 
+;;
+;; Input Parameters:
+;;   Number confidence: Represents the desired % chance of accurately
+;;                      returning the dominant plane. 
+;;   Number percentage: Represents the expected percentage of points
+;;                      that are part of the dominant plane. 
+;;
+;; Return:
+;;   Number: The number of iterations required for RANSAC.
+;;
+;; -------------------------
+
+(define (ransacNumberOfIteration confidence percentage)
+  ( ceiling ( / ( log ( - 1 confidence ) 10 ) ( log ( - 1 ( expt percentage 3 ) ) 10  ) ) ) )
+
+;; -------------------------
+;;
+;; Function: dominantPlane
+;;
+;; Description: Perform numerous samples to find dominant plane. 
+;;
+;; Input Parameters:
+;;    list Ps: A list of 3D points.
+;;    number k: The number of iterations required. 
+;;
+;; Return:
+;;   list: The parameters '(a b c d) of the dominant plane. 
+;;
+;; -------------------------
+
+;(define (dominantPlane Ps k) )
 
 ;; -------------------------
 ;;
