@@ -65,6 +65,52 @@
 
 ;; -------------------------
 ;;
+;; Function: distance
+;;
+;; Description: Computes the distance between a point and a plane. (helper)
+;;
+;; Input Parameters:
+;;   list plane: A list of the a, b, c, and d values of
+;;               that represent a plane in the form
+;;               ax + by + cz = d.
+;;   list point: A 3D point. 
+;;
+;; Return:
+;;   number: the distance between the point and the plane 
+;;
+;; -------------------------
+
+(define (distance plane point)
+  ( abs ( / ( + ( * (car plane) (car point) ) ( * (cadr plane) (cadr point) )
+                ( * (caddr plane) (caddr point) ) ( * (cadddr plane) -1 ) )
+            ( sqrt ( + ( * (car plane) (car plane) ) ( * (cadr plane) (cadr plane) ) ( * (caddr plane) (caddr plane) ) ) ) ) ) )
+
+;; -------------------------
+;;
+;; Function: support
+;;
+;; Description: Creates the support of a plane.
+;;
+;; Input Parameters:
+;;   list plane: A list of the a, b, c, and d values of
+;;               that represent a plane in the form
+;;               ax + by + cz = d.
+;;   list points: A list of 3D points.
+;;   Number eps: Represents the maximum distance a point can be from a plane
+;;               for the point to be considered part of the plane. 
+;;
+;; Return:
+;;   pair: car is a number that represents the support counter,
+;;         cdr is the plane parameters. 
+;;
+;; -------------------------
+
+(define (support plane points eps)
+  ( if ( < (distance plane (car points) eps ) )
+       ( support
+
+;; -------------------------
+;;
 ;; Function: planeRANSAC
 ;;
 ;; Description: Calculates the dominant plane equation and the number of points that
