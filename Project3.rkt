@@ -3,7 +3,7 @@
 ;; Student Name: Brent Palmer
 ;; Student Number: 300193610
 ;;
-;; -------------------------  
+;; -------------------------
 
 #lang scheme
 
@@ -106,8 +106,8 @@
 ;; -------------------------
 
 (define (support plane points eps)
-  ( if ( < (distance plane (car points) eps ) )
-       ( support
+  ( let ( (valid (filter (lambda(point) (< (distance plane point) eps)) points)))
+       ( cons (length valid) plane ) ) )
 
 ;; -------------------------
 ;;
