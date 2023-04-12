@@ -196,7 +196,7 @@
 ;;               for the point to be considered part of the plane. 
 ;;
 ;; Return:
-;;   Pair: car is the dominant plane equation, cdr is the number of points that supports it
+;;   Pair: car is the number of points of the dominant plane, cdr is the dominant plane equation
 ;;
 ;; -------------------------  
 
@@ -206,16 +206,41 @@
      ( let (( domPlane (dominantPlane Ps k eps))) ; determine the dominant plane
         ( support domPlane Ps eps)))) ; find and return the support for the dominant plane
      
+;; -------------------------
+;;
+;; Function: saveXYZ
+;;
+;; Description: Calculates the dominant plane equation and the number of points that
+;;              supports it, and writes all points to a file.
+;;
+;; Input Parameters:
+;;   String filenameIn: The name of the file to be processed.
+;;   String filenameOut: The name of the file to be written to.
+;;   Number confidence: Represents the desired % chance of accurately
+;;                      returning the dominant plane. 
+;;   Number percentage: Represents the expected percentage of points
+;;                      that are part of the dominant plane. 
+;;   Number eps: Represents the maximum distance a point can be from a plane
+;;               for the point to be considered part of the plane. 
+;;
+;; Return:
+;;   No explicit return - all points associated with dominant plane are written to a file.
+;;
+;; -------------------------  
 
-
-
-
-
-
-
-
-
-
+(define (saveXYZ filenameIn filenameOut confidence percentage eps)
+  (call-with-output-file filenameOut ; open file for writing
+    (lambda(output-port) ; pass through the output-port
+      ( let (( bestSupport (planeRANSAC filenameIn confidence percentage eps)) ; determine the dominant plane's support
+             ( Ps (readXYZ filenameIn))) ; read in the points from the in-file
+         ( let ( (valid (filter (lambda(point) (< (distance (cdr bestSupport) point) eps)) Ps))) ; use filter to make a list of valid support points
+            (display bestSupport) ; send information about the plane to console
+            (display "X\tY\tZ" output-port) ; set the header
+            (newline output-port)
+            (for-each (lambda (point) ; write each point to the file
+                      (display point output-port)
+                      (newline output-port))
+                    valid))))))
 
 
 

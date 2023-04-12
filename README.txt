@@ -51,4 +51,5 @@ Function: planeRANSAC
 (planeRANSAC "PointCloud1.xyz" 0.99 0.5 0.5)
 ~36k points, [some equation parameters]
 
-
+Function: saveXYZ
+(saveXYZ "PointCloud1.xyz" "PointCloud1_p1.xyz" 0.99 0.5 0.5)
