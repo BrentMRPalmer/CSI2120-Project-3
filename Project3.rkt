@@ -235,10 +235,14 @@
              ( Ps (readXYZ filenameIn))) ; read in the points from the in-file
          ( let ( (valid (filter (lambda(point) (< (distance (cdr bestSupport) point) eps)) Ps))) ; use filter to make a list of valid support points
             (display bestSupport) ; send information about the plane to console
-            (display "X\tY\tZ" output-port) ; set the header
+            (display "x\ty\tz" output-port) ; set the header
             (newline output-port)
             (for-each (lambda (point) ; write each point to the file
-                      (display point output-port)
+                      (display (car point) output-port)
+                      (display " " output-port)
+                      (display (car point) output-port)
+                      (display " " output-port)
+                      (display (car point) output-port)
                       (newline output-port))
                     valid))))))
 

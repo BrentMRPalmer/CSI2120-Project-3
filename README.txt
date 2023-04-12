@@ -14,16 +14,16 @@ Status of the project: All code complete and working.
          include the dominant point clouds of each of the respective point clouds. 
 1 file, Part 3.pdf is included for reference to instructions. 
 
-The return values of saveXYZ (which is just planeRANSAC with extra steps) are outlined here for the four point clouds:
+The return values of saveXYZ are outlined here for the four point clouds (this is equivalent to planeRANSAC outputs, as saveXYZ outputs to console the results of planeRANSAC):
 Confidence: 0.99 Percentage: 0.5 Eps: 0.5
 > (saveXYZ "PointCloud1.xyz" "PointCloud1_p1.xyz" 0.99 0.5 0.5)
-(37259 -2.667909382406669 -5.797185344417666 107.1379518764675 -70.74330099183318)
+(36574 0.009276186178244772 0.34463516953846773 -13.897510362325939 11.232362161012883)
 > (saveXYZ "Point_Cloud_1_No_Road_Reduced.xyz" "Point_Cloud_1_No_Road_Reduced_p1.xyz" 0.99 0.5 0.5)
-(1996 -22.014001295009145 -58.18670152233863 278.7955571728768 -46.5073213165604)
+(2480 4.707939090858707 -2.087953319366008 114.732588708225 -6.364564946946601)
 > (saveXYZ "Point_Cloud_2_No_Road_Reduced.xyz" "Point_Cloud_2_No_Road_Reduced_p1.xyz" 0.99 0.5 0.5)
-(3368 -0.9873339576729165 5.783786779100219 55.20996334891797 27.708609368792857)
+(3281 9.293018388352316 2.9258943338276007 63.89827578159844 31.359621500486533)
 > (saveXYZ "Point_Cloud_3_No_Road_Reduced.xyz" "Point_Cloud_3_No_Road_Reduced_p1.xyz" 0.99 0.5 0.5)
-(3027 -18.293004453265823 1.4203681782879158 104.93193539320124 125.87494756815676)
+(2915 0.4686232737665934 0.5729202113891974 31.60183791573011 20.177161509968986)
 
 
 NOTE: I implemented an additional function called SaveXYZ that both executes planeRANSAC and 
