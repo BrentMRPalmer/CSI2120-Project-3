@@ -239,10 +239,10 @@
             (newline output-port)
             (for-each (lambda (point) ; write each point to the file
                       (display (car point) output-port)
-                      (display " " output-port)
-                      (display (car point) output-port)
-                      (display " " output-port)
-                      (display (car point) output-port)
+                      (display "\t" output-port)
+                      (display (cadr point) output-port)
+                      (display "\t" output-port)
+                      (display (caddr point) output-port)
                       (newline output-port))
                     valid))))))
 
